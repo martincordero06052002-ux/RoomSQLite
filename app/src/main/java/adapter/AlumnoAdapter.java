@@ -1,10 +1,14 @@
 package adapter;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,14 +21,15 @@ import java.util.List;
 import viewmodel.AlumnoViewModel;
 
 public class AlumnoAdapter extends RecyclerView.Adapter<AlumnoAdapter.AlumnoViewHolder> {
+
     private List<Alumno> listaAlumnos;
-    private AlumnoViewModel viewModel; // Referencia para borrar/editar
+    private AlumnoViewModel viewModel;
 
     public AlumnoAdapter(AlumnoViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
-    public void setAlumnos(List<Alumno> alumnos){
+    public void setAlumnos(List<Alumno> alumnos) {
         this.listaAlumnos = alumnos;
         notifyDataSetChanged();
     }
@@ -43,20 +48,40 @@ public class AlumnoAdapter extends RecyclerView.Adapter<AlumnoAdapter.AlumnoView
             holder.etNombre.setText(alumnoActual.nombre);
             holder.etNota.setText(String.valueOf(alumnoActual.nota));
 
-            // Implementar lógica de botones del PDF [cite: 337, 347]
-            holder.btnBorrar.setOnClickListener(v -> viewModel.eliminar(alumnoActual));
+            holder.btnBorrar.setOnClickListener(v -> {
+                showDeleteConfirmationDialog(v.getContext(), alumnoActual);
+            });
 
             holder.btnModificar.setOnClickListener(v -> {
-                // Actualizar objeto con nuevos datos de los EditTexts
                 alumnoActual.nombre = holder.etNombre.getText().toString();
-                alumnoActual.nota = Float.parseFloat(holder.etNota.getText().toString());
-                viewModel.actualizar(alumnoActual);
+                try {
+                    alumnoActual.nota = Float.parseFloat(holder.etNota.getText().toString());
+                    viewModel.actualizar(alumnoActual);
+                    Toast.makeText(v.getContext(), "Alumno actualizado", Toast.LENGTH_SHORT).show();
+                } catch (NumberFormatException e) {
+                    Toast.makeText(v.getContext(), "Nota inválida", Toast.LENGTH_SHORT).show();
+                }
             });
         }
     }
 
+    private void showDeleteConfirmationDialog(Context context, Alumno alumno) {
+        new AlertDialog.Builder(context)
+                .setTitle("Confirmar Borrado")
+                .setMessage("¿Está seguro de borrar a " + alumno.nombre + "?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("Sí, Borrar", (dialog, which) -> {
+                    viewModel.eliminar(alumno);
+                    Toast.makeText(context, "Alumno eliminado", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
     @Override
-    public int getItemCount() { return listaAlumnos != null ? listaAlumnos.size() : 0; }
+    public int getItemCount() {
+        return listaAlumnos != null ? listaAlumnos.size() : 0;
+    }
 
     class AlumnoViewHolder extends RecyclerView.ViewHolder {
         EditText etNombre, etNota;
@@ -64,10 +89,10 @@ public class AlumnoAdapter extends RecyclerView.Adapter<AlumnoAdapter.AlumnoView
 
         public AlumnoViewHolder(View itemView) {
             super(itemView);
-            etNombre = itemView.findViewById(R.id.etNombre); // [cite: 315]
-            etNota = itemView.findViewById(R.id.etNota);     // [cite: 325]
-            btnModificar = itemView.findViewById(R.id.btnModificar); // [cite: 338]
-            btnBorrar = itemView.findViewById(R.id.btnBorrar);       // [cite: 347]
+            etNombre = itemView.findViewById(R.id.etNombre);
+            etNota = itemView.findViewById(R.id.etNota);
+            btnModificar = itemView.findViewById(R.id.btnModificar);
+            btnBorrar = itemView.findViewById(R.id.btnBorrar);
         }
     }
 }

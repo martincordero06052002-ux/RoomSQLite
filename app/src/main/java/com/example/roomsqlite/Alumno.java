@@ -20,8 +20,6 @@ public class Alumno {
         this.nombre = nombre;
         this.nota = nota;
     }
-    // ... Añade los Getters y Setters que faltan [cite: 65-84]
     public void setId(int id) { this.id = id; }
     public int getId() { return id; }
-    // etc...
 }

@@ -12,10 +12,6 @@ import java.util.List;
 @Dao
 public interface AlumnoDao {
 
-    // Para devolver la lista de alumno se utiliza LIVEDATA, De esta
-    // forma el Array se actualiza cuando cambien los datos
-    // de la tabla Alumno y podemos observarlo desde la vista. POr lo
-    // cual se observa la BD y ella misma notifica los cambios
     @Query("SELECT * FROM Alumno")
     LiveData<List<Alumno>> getAlumnos();
 
