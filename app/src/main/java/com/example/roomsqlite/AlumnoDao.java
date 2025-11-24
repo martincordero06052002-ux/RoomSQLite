@@ -12,11 +12,14 @@ import java.util.List;
 @Dao
 public interface AlumnoDao {
 
+    // Obtener todos los alumnos (existente)
     @Query("SELECT * FROM Alumno")
     LiveData<List<Alumno>> getAlumnos();
+    @Query("SELECT * FROM alumno WHERE claseId = :claseId ORDER BY nombre ASC")
+    LiveData<List<Alumno>> getAlumnosPorClase(int claseId);
 
-    @Query("SELECT * FROM alumno WHERE Id LIKE :uuid")
-    Alumno getAlumno(String uuid);
+    @Query("SELECT * FROM alumno WHERE id = :id")
+    Alumno getAlumno(int id);
 
     @Insert
     void addAlumno(Alumno alumno);

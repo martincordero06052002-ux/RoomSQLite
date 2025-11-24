@@ -3,13 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navegacion_alumnos"
-    app:startDestination="@id/listadoAlumnosFragment">
+    app:startDestination="@id/listadoClasesFragment">
+
+    <fragment
+        android:id="@+id/listadoClasesFragment"
+        android:name="com.example.roomsqlite.ListadoClasesFragment"
+        android:label="Clases"
+        tools:layout="@layout/fragment_listado_clases">
+
+        <action
+            android:id="@+id/action_clases_to_alumnos"
+            app:destination="@id/listadoAlumnosFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/listadoAlumnosFragment"
         android:name="com.example.roomsqlite.ListadoAlumnosFragment"
-        android:label="Listado"
+        android:label="Alumnos"
         tools:layout="@layout/fragment_listado_alumnos">
+
+        <argument
+            android:name="CLASE_ID_KEY"
+            app:argType="integer"
+            android:defaultValue="-1" />
 
         <action
             android:id="@+id/action_listado_to_nuevo"
@@ -21,4 +37,5 @@
         android:name="com.example.roomsqlite.NuevoAlumnoFragment"
         android:label="Nuevo Alumno"
         tools:layout="@layout/fragment_nuevo_alumno" />
+
 </navigation>

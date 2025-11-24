@@ -5,12 +5,13 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Alumno.class}, version = 1)
+@Database(entities = {Alumno.class, Clase.class}, version = 2)
 public abstract class AlumnoDataBase extends RoomDatabase {
 
     private static volatile AlumnoDataBase INSTANCIA;
 
     public abstract AlumnoDao getAlumnoDao();
+    public abstract ClaseDao getClaseDao();
 
     public static AlumnoDataBase obtenerInstancia(final Context context) {
         if (INSTANCIA == null) {
